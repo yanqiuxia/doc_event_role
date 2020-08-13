@@ -213,6 +213,7 @@ def batchify_sequence_labeling_with_label(input_batch_list, gpu, if_train=True):
 
     label_seq_tensor = label_seq_tensor[word_perm_idx]
     mask = mask[word_perm_idx]
+    mask = mask.bool()
 
     _, word_seq_recover = word_perm_idx.sort(0, descending=False)
 
@@ -307,7 +308,7 @@ def train(data):
             # print("loss:",loss.item())
             sample_loss += loss.item()
             total_loss += loss.item()
-            if end%500 == 0:
+            if batch_id%100 == 0:
                 temp_time = time.time()
                 temp_cost = temp_time - temp_start
                 temp_start = temp_time
@@ -401,7 +402,7 @@ def load_model_decode(data, name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Tuning with NCRF++')
     # parser.add_argument('--status', choices=['train', 'decode'], help='update algorithm', default='train')
-    parser.add_argument('--config',  help='Configuration File', default='None')
+    parser.add_argument('--config',  help='Configuration File', default='/home/eleanor/yan.qiuxia/PycharmProjects/doc_event_role/pytorch/model/code/config/example.config')
     parser.add_argument('--wordemb',  help='Embedding for words', default='None')
     parser.add_argument('--charemb',  help='Embedding for chars', default='None')
     parser.add_argument('--status', choices=['train', 'decode'], help='update algorithm', default='train')
@@ -459,10 +460,10 @@ if __name__ == '__main__':
         data.read_config(args.config)
         print(data.raw_dir)
 
-        data.generate_instance('raw')
+        data.generate_instance('test')
         print("nbest: %s"%(data.nbest))
-        decode_results = load_model_decode(data, 'raw')
-        data.write_decoded_results(decode_results, 'raw')
+        decode_results = load_model_decode(data, 'test')
+        data.write_decoded_results(decode_results, 'test')
     else:
         print("Invalid argument! Please use valid arguments! (train/test/decode)")
 

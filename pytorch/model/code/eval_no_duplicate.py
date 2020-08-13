@@ -3,7 +3,7 @@ import json
 from pytorch_pretrained_bert import BertTokenizer
 import spacy
 
-nlp = spacy.load("en_core_web_sm") # for finding head noun
+# nlp = spacy.load("en_core_web_sm") # for finding head noun
 tokenizer = BertTokenizer.from_pretrained('bert-base-uncased') # Load bert pre-trained model tokenizer (vocabulary)
 
 tags_to_extract =['perp_individual_id', 'perp_organization_id', 'phys_tgt_id', 'hum_tgt_name', 'incident_instrument_id']
@@ -150,9 +150,11 @@ def get_eval_results(doc_pred_spans, doc_gold_events, to_print=False):
                 doc_pred_spans[doc_id][tag][idx] = span_tokenized
 
                 head_noun = list()
-                noun_chunks = list(nlp(" ".join(span_tokenized).replace(" ##", '')).noun_chunks)
+                # noun_chunks = list(nlp(" ".join(span_tokenized).replace(" ##", '')).noun_chunks)
+                noun_chunks = list((" ".join(span_tokenized).replace(" ##", '')))
                 for noun_chunk in noun_chunks: 
-                    head_noun.append(noun_chunk.root.text)
+                    # head_noun.append(noun_chunk.root.text)
+                    head_noun.append(noun_chunk)
 
                 doc_pred_spans_head_noun[doc_id][tag].append({"span": span_tokenized, "hn": head_noun})
 
@@ -175,9 +177,11 @@ def get_eval_results(doc_pred_spans, doc_gold_events, to_print=False):
                     event_tokenized.append(span_tokenized)
 
                     head_noun = list()
-                    noun_chunks = list(nlp(" ".join(span_tokenized).replace(" ##", '')).noun_chunks)
+                    # noun_chunks = list(nlp(" ".join(span_tokenized).replace(" ##", '')).noun_chunks)
+                    noun_chunks = list((" ".join(span_tokenized).replace(" ##", '')))
                     for noun_chunk in noun_chunks: 
-                        head_noun.append(noun_chunk.root.text)
+                        # head_noun.append(noun_chunk.root.text)
+                        head_noun.append(noun_chunk)
                     event_head_noun.append({"span": span_tokenized, "hn": head_noun})
 
                 doc_gold_events[doc_id]["roles"][tag][idx] = event_tokenized

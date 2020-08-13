@@ -82,7 +82,7 @@ class WordSequence(nn.Module):
         hidden = None
         lstm_out, hidden = self.sent_lstm(packed_words, hidden)
         lstm_out, _ = pad_packed_sequence(lstm_out)
-        ## lstm_out (seq_len, seq_len, hidden_size)
+        ## lstm_out (seq_len, batch_size, hidden_size)
         feature_out_sent = self.droplstm_sent(lstm_out.transpose(1,0))
         ## feature_out (batch_size, seq_len, hidden_size)
         return feature_out_sent
@@ -122,7 +122,7 @@ class WordSequence(nn.Module):
         hidden = None
         lstm_out, hidden = self.lstm(packed_words, hidden)
         lstm_out, _ = pad_packed_sequence(lstm_out)
-        ## lstm_out (seq_len, seq_len, hidden_size)
+        ## lstm_out (seq_len, batch_size, hidden_size)
         feature_out = self.droplstm(lstm_out.transpose(1,0))
         # feature_out = lstm_out.transpose(1,0)
         ## feature_out (batch_size, seq_len, hidden_size)
